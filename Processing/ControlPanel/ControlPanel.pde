@@ -9,7 +9,7 @@ CheckBox checkbox;
 int myColorBackground;
 long buttons = 0;
 int page = 0;
-long[] savestates = {0};
+long[] savestates = {0,0,0,0,0,0,0};
 
 void setup() {
   size(900, 700);
@@ -58,41 +58,57 @@ void setup() {
                 .addItem("30", 30)
                 .addItem("31", 31)
                 ;
-  cp5.addButton("Save")
-     .setPosition(450,400)
-     .setSize(50,50)
-     .setValue(0)
-     .activateBy(ControlP5.PRESS);
-     ;
-  cp5.addButton("Next")
-     .setPosition(550,400)
-     .setSize(50,50)
-     .setValue(0)
-     .activateBy(ControlP5.PRESS);
-     ;
-  cp5.addButton("Prev")
-     .setPosition(350,400)
-     .setSize(50,50)
-     .setValue(0)
-     .activateBy(ControlP5.PRESS);
-     ;
   
   myPort = new Serial(this, "/dev/ttyUSB1", 9600);
 }
 
 void draw() {
   background(0);
+  
+  buttons = 0;
+  for(int i = 0; i<32; ++i)
+  {
+    if(checkbox.getState(i)) buttons |= (long)pow(2,i);
+  }
+  sendtocontroller();
+    
+  text("Page",400,500);
+  text(page,450,500);
 }
 
-void controlEvent(ControlEvent theEvent) {
-  if (theEvent.isFrom(checkbox)) { //<>//
-    myColorBackground = 0;
+void controlEvent(ControlEvent theEvent) { //<>//
+}
+
+void keyPressed() {
+  if (key==' ') {
+    checkbox.deactivateAll();
+  } 
+  if (key=='s')
+  {
     buttons = 0;
     for(int i = 0; i<32; ++i)
     {
       if(checkbox.getState(i)) buttons |= (long)pow(2,i);
     }
-    sendtocontroller();
+    savestates[page] = buttons;
+  }
+  if(key=='a')
+  {
+    if(page > 0) page--;
+    buttons = savestates[page];
+    for(int i = 0; i<32; ++i)
+    {
+      if((buttons >> i & 1) == 1) checkbox.activate(i);
+    }
+  }
+  if(key=='d')
+  {
+    page++;
+    buttons = savestates[page];
+    for(int i = 0; i<32; ++i)
+    {
+      if((buttons >> i & 1) == 1) checkbox.activate(i);
+    }
   }
 }
 
