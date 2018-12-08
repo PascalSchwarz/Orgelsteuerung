@@ -77,7 +77,7 @@ void setup() {
      .activateBy(ControlP5.PRESS);
      ;
   
-  myPort = new Serial(this, "/dev/ttyUSB0", 9600);
+  myPort = new Serial(this, "/dev/ttyUSB1", 9600);
 }
 
 void draw() {
@@ -90,32 +90,10 @@ void controlEvent(ControlEvent theEvent) {
     buttons = 0;
     for(int i = 0; i<32; ++i)
     {
-      if(checkbox.getState(i)) buttons += pow(2,i);
+      if(checkbox.getState(i)) buttons |= (long)pow(2,i);
     }
     sendtocontroller();
   }
-}
-
-public void Prev(boolean value){
-  if(value == true)
-  {
-    page--;
-    //buttons = savestates[page];
-    println("Currentpage: %i", page);
-  }
-}
-
-public void Next(int value){
-  if(value == 1)
-  {
-    page++;
-    //buttons = savestates[page];
-    println("Currentpage: %i", page);
-  }
-}
-
-public void Save(int value){
-  savestates[page] = buttons;
 }
 
 void sendtocontroller()
