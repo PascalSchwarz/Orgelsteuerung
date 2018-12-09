@@ -3,6 +3,7 @@ int clockPin = 12;
 int dataPin = 11;
 
 byte buffer[4] = {0x00,0x00,0x00,0x00};
+bool lastState = 0;
 
 void setup() {
   pinMode(latchPin, OUTPUT);
@@ -20,6 +21,8 @@ void setup() {
   shiftOut(dataPin, clockPin, MSBFIRST, 0x00);   //ch24-31
 
   digitalWrite(latchPin, HIGH);
+
+  lastState = digitalRead(A4);
 }
 
 void loop() {
@@ -36,4 +39,11 @@ void loop() {
     shiftOut(dataPin, clockPin, MSBFIRST, buffer[0]);   //ch24-31
 
     digitalWrite(latchPin, HIGH);
+
+  if(lastState != digitalRead(A4))
+  {
+    lastState = digitalRead(A4);
+    Serial.print("a");
+    delay(50);
+  }
 }
