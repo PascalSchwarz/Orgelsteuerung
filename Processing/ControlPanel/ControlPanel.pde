@@ -95,6 +95,7 @@ void keyPressed() {
   if(key=='a')
   {
     if(page > 0) page--;
+    checkbox.deactivateAll();
     buttons = savestates[page];
     for(int i = 0; i<32; ++i)
     {
@@ -104,6 +105,7 @@ void keyPressed() {
   if(key=='d')
   {
     page++;
+    checkbox.deactivateAll();
     buttons = savestates[page];
     for(int i = 0; i<32; ++i)
     {
