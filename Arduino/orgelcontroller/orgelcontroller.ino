@@ -4,6 +4,7 @@ int dataPin = 11;
 
 byte buffer[4] = {0x00,0x00,0x00,0x00};
 bool lastState = 0;
+unsigned long lastTime = 0;
 
 void setup() {
   pinMode(latchPin, OUTPUT);
@@ -40,10 +41,10 @@ void loop() {
 
     digitalWrite(latchPin, HIGH);
 
-  if(lastState != digitalRead(A4))
+  if(lastState != digitalRead(A4) && millis() > lastTime+50)
   {
     lastState = digitalRead(A4);
     Serial.print("a");
-    delay(50);
+    lastTime = millis();
   }
 }
